@@ -17,6 +17,7 @@ module Datadog
           SPAN_COMMAND = 'redis.command'.freeze
           TAG_DB = 'out.redis_db'.freeze
           TAG_RAW_COMMAND = 'redis.raw_command'.freeze
+          TAG_RESULT_SIZE = 'db.redis.result.size'.freeze
           TYPE = 'redis'.freeze
           TAG_COMPONENT = 'redis'.freeze
           TAG_OPERATION_COMMAND = 'command'.freeze

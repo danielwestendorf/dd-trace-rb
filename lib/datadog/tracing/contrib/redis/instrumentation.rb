@@ -27,7 +27,12 @@ module Datadog
                 span.resource = get_command(args, show_command_args)
                 Contrib::Redis::Tags.set_common_tags(self, span, show_command_args)
 
-                super
+                result = super
+
+                result_size = result_size(result)
+                span.set_tag(Ext::TAG_RESULT_SIZE, result_size) if result_size
+
+                result
               end
             end
 
@@ -42,11 +47,27 @@ module Datadog
                 span.set_metric Contrib::Redis::Ext::METRIC_PIPELINE_LEN, commands.length
                 Contrib::Redis::Tags.set_common_tags(self, span, show_command_args)
 
-                super
+                result = super
+
+                result_size = result_size(result)
+                span.set_tag(Ext::TAG_RESULT_SIZE, result_size) if result_size
+
+                result
               end
             end
 
             private
+
+            def result_size(result)
+              case result
+              when String
+                result.size
+              when Numeric
+                result
+              else
+                nil
+              end
+            end
 
             def command_args?
               pinned = Datadog.configuration_for(redis_instance, :command_args)
